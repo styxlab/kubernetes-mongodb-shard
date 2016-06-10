@@ -1,0 +1,16 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: mongodb-shard-node__NODENUM__
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: mongodb-shard-node__NODENUM__
+        role: mongoshard
+        tier: backend
+    spec:
+      nodeSelector:
+        kubernetes.io/hostname: __NODESELECTOR__
+      containers:

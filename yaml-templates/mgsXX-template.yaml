@@ -1,0 +1,12 @@
+      - name: __RSID____MSGNUM__-node__NODENUM__
+        image: mongo:3.2
+        command:
+        - "mongos"
+        args:
+        - "--configdb"
+        - "configReplSet__MSGNUM__/__CONFIG_SERVERS_SERVICES__"
+        - "--port"
+        - "__PORT__"
+        ports:
+        - name: __RSID____MSGNUM__-node__NODENUM__
+          containerPort: __PORT__

@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: mongodb-node__NODENUM__ 
+  labels:
+    app: mongodb-node__NODENUM__
+    role: mongoshard
+    tier: backend
+spec:
+  selector:
+    app: mongodb-shard-node__NODENUM__
+    role: mongoshard
+    tier: backend 
+  ports:

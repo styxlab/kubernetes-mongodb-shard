@@ -1,0 +1,3 @@
+  - name: __RSID____RSNUM__-node__NODENUM__
+    port: __PORT__
+    protocol: TCP

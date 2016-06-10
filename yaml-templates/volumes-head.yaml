@@ -1,0 +1,4 @@
+      volumes:
+      - name: db-cfg
+        hostPath:
+          path: /enc/mongodb/db-cfg
