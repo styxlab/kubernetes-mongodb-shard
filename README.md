@@ -1,18 +1,17 @@
 # kubernetes-mongodb-shard
 Deploy a mongodb sharded cluster on kubernetes. 
 
-Prerequisites
+##Prerequisites
 - A Kubernetes cluster with at least 3 scheduable nodes.
 
-Features:
+##Features:
 - Configurable number of shards, replicas, config servers and mongos
 - Shard members and data replicas are distributed evenly on available nodes
 - Storage is directly allocated on each node
 - All mongo servers are combined into one kubernetes pod per node
 - Services are setup which can be consumed upstream
 
-Description:
-
+##Description:
 Setting up mongodb shard on kubernetes is easy with this repo. kubectl 
 is used to determine the number of nodes in your kubernetes cluster
 and the provided shell script generate.sh creates one kubernetes .yaml
@@ -31,5 +30,5 @@ to maximize I/O throughput.
 
 This is the first commit, so please feel free to improve this space.
 
-Todos:
+##Todos:
 - EmptyDir option
