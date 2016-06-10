@@ -1,0 +1,3 @@
+      - name: db-rs__RSNUM__
+        hostPath:
+          path: /enc/mongodb/db-rs__RSNUM__

@@ -1,0 +1,18 @@
+      - name: __RSID____RSNUM__-node__NODENUM__
+        image: mongo:3.2
+        args:
+        - "--storageEngine"
+        - wiredTiger
+        - "--configsvr"
+        - "--replSet"
+        - configReplSet__RSNUM__
+        - "--port"
+        - "__PORT__"
+        - "--noprealloc"
+        - "--smallfiles"
+        ports:
+        - name: __RSID____RSNUM__-node__NODENUM__
+          containerPort: __PORT__
+        volumeMounts:
+        - name: db-cfg
+          mountPath: /data/db
