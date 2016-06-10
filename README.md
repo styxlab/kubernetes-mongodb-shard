@@ -14,7 +14,7 @@ Deploy a mongodb sharded cluster on kubernetes.
 ##Description:
 Setting up mongodb shard on kubernetes is easy with this repo. kubectl 
 is used to determine the number of nodes in your kubernetes cluster
-and the provided shell script generate.sh creates one kubernetes .yaml
+and the provided shell script `generate.sh` creates one kubernetes .yaml
 as well as the neccessary .js config scripts. Finally, the
 shard is created by executing the .yaml files and applying the
 config files.
