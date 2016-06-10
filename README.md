@@ -5,13 +5,14 @@ Prerequisites
 - A Kubernetes cluster with at least 3 scheduable nodes.
 
 Features:
-- Configurable number of shards replicas, config servers and mongos
-- Shard members and data replicas are distributed evenly on the nodes
+- Configurable number of shards, replicas, config servers and mongos
+- Shard members and data replicas are distributed evenly on available nodes
 - Storage is directly allocated on each node
-- All mongo servers are combined into one kubernetes Pod per node
+- All mongo servers are combined into one kubernetes pod per node
 - Services are setup which can be consumed upstream
 
 Description:
+
 Setting up mongodb shard on kubernetes is easy with this repo. kubectl 
 is used to determine the number of nodes in your kubernetes cluster
 and the provided shell script generate.sh creates one kubernetes .yaml
