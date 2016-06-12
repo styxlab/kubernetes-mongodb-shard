@@ -101,6 +101,7 @@ mongodb-node01   10.3.0.175   <none>        27019/TCP,27018/TCP,27017/TCP,27020/
 mongodb-node02   10.3.0.13    <none>        27019/TCP,27018/TCP,27017/TCP,27020/TCP,27021/TCP   1d
 mongodb-node03   10.3.0.47    <none>        27019/TCP,27018/TCP,27017/TCP,27020/TCP,27021/TCP   1d
 ```
+
 ##Configuration Options
 Configuration options are currently hard coded in `src/generate.sh`. This will be enhanced later. The following options are availabe:
 ```
@@ -110,19 +111,163 @@ MONGOS_PER_CLUSTER: you connect to your shard through mongos (default: one per n
 CFG_PER_CLUSTER: config servers per cluster (default: 1 config server, configured as a replication set)
 CFG_REPLICA: number of replicas per configuration cluster (default: number of nodes)
 REPLICAS_PER_SHARD: each shard is configured as a replication set (default: 2)
+```
 
 ##Ports
 As each pod gets on IP address assigned, each service within a pod must have an individual port assigned. 
 As the mongos are the services by which you access your shard from other applications, the standard
-mongodb port `27017' is given to them. Here is the list of port assignments:
+mongodb port `27017` is given to them. Here is the list of port assignments:
 
-Usually you need not be concerned about the ports as you will only access 
-
-
-
+Usually you need not be concerned about the ports as you will only access the shard through the
+standard port `27017`.
 
 ##Examples
+A typical `yaml` file for one pod will look like this:
+```
+apiVersion: v1
+kind: Service
+metadata:
+  name: mongodb-node01 
+  labels:
+    app: mongodb-node01
+    role: mongoshard
+    tier: backend
+spec:
+  selector:
+    app: mongodb-shard-node01
+    role: mongoshard
+    tier: backend 
+  ports:
+  - name: arb03-node01
+    port: 27019
+    protocol: TCP
+  - name: cfg01-node01
+    port: 27018
+    protocol: TCP
+  - name: mgs01-node01
+    port: 27017
+    protocol: TCP
+  - name: rsp01-node01
+    port: 27020
+    protocol: TCP
+  - name: rss02-node01
+    port: 27021
+    protocol: TCP
 
+---
+
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: mongodb-shard-node01
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: mongodb-shard-node01
+        role: mongoshard
+        tier: backend
+    spec:
+      nodeSelector:
+        kubernetes.io/hostname: 78.47.201.138
+      containers:
+      - name: arb03-node01
+        image: mongo:3.2
+        args:
+        - "--storageEngine"
+        - wiredTiger
+        - "--replSet"
+        - rs03
+        - "--port"
+        - "27019"
+        - "--noprealloc"
+        - "--smallfiles"
+        ports:
+        - name: arb03-node01
+          containerPort: 27019
+        volumeMounts:
+        - name: db-rs03
+          mountPath: /data/db
+      - name: rss02-node01
+        image: mongo:3.2
+        args:
+        - "--storageEngine"
+        - wiredTiger
+        - "--replSet"
+        - rs02
+        - "--port"
+        - "27021"
+        - "--noprealloc"
+        - "--smallfiles"
+        ports:
+        - name: rss02-node01
+          containerPort: 27021
+        volumeMounts:
+        - name: db-rs02
+          mountPath: /data/db
+      - name: rsp01-node01
+        image: mongo:3.2
+        args:
+        - "--storageEngine"
+        - wiredTiger
+        - "--replSet"
+        - rs01
+        - "--port"
+        - "27020"
+        - "--noprealloc"
+        - "--smallfiles"
+        ports:
+        - name: rsp01-node01
+          containerPort: 27020
+        volumeMounts:
+        - name: db-rs01
+          mountPath: /data/db
+      - name: cfg01-node01
+        image: mongo:3.2
+        args:
+        - "--storageEngine"
+        - wiredTiger
+        - "--configsvr"
+        - "--replSet"
+        - configReplSet01
+        - "--port"
+        - "27018"
+        - "--noprealloc"
+        - "--smallfiles"
+        ports:
+        - name: cfg01-node01
+          containerPort: 27018
+        volumeMounts:
+        - name: db-cfg
+          mountPath: /data/db
+      - name: mgs01-node01
+        image: mongo:3.2
+        command:
+        - "mongos"
+        args:
+        - "--configdb"
+        - "configReplSet01/mongodb-node01.default.svc.cluster.local:27018,mongodb-node02.default.svc.cluster.local:27018,mongodb-node03.default.svc.cluster.local:27018"
+        - "--port"
+        - "27017"
+        ports:
+        - name: mgs01-node01
+          containerPort: 27017
+      volumes:
+      - name: db-cfg
+        hostPath:
+          path: /enc/mongodb/db-cfg
+      - name: db-rs01
+        hostPath:
+          path: /enc/mongodb/db-rs01
+      - name: db-rs02
+        hostPath:
+          path: /enc/mongodb/db-rs02
+      - name: db-rs03
+        hostPath:
+          path: /enc/mongodb/db-rs03
+```
 
 ##Todos:
+- Gather config parameters
 - EmptyDir option
