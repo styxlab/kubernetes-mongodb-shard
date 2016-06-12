@@ -15,9 +15,9 @@ Deploy a mongodb sharded cluster on kubernetes.
 ##Description
 Setting up mongodb shard on kubernetes is easy with this repo. kubectl 
 is used to determine the number of nodes in your kubernetes cluster
-and the provided shell script `generate.sh` creates one kubernetes `.yaml`
-per pod as well as the neccessary `.js` config scripts. Finally, the
-shard is created by executing the `.yaml` files and applying the
+and the provided shell script `generate.sh` creates one kubernetes `yaml`
+per pod as well as the neccessary `js` config scripts. Finally, the
+shard is created by executing the `yaml` files and applying the
 config files.
 
 These scripts span an entire sharded mongodb database on both small
@@ -36,7 +36,7 @@ $ cd kubernetes-mongodb-shard
 $ make build
 ```
 All needed files can be found in the `build` folder. You should find one
-`.yaml` file for each node of you cluster and a couple of `.js`
+`yaml` file for each node of you cluster and a couple of `js`
 files that will configure the mongodb shard. Finally, you
 need to execute these files on your kubernetes cluster:
 ```
@@ -92,7 +92,7 @@ mongos> sh.status()
 ```
 
 ##Consume
-The default configurations configures one mongos service per node which can be used to connect
+The default configurations configures one mongos service per node. Use one of them to connect
 to your shard from any other application on your kubernetes cluser:
 ```
 $ kubectl get svc -l role="mongoshard"
@@ -101,7 +101,27 @@ mongodb-node01   10.3.0.175   <none>        27019/TCP,27018/TCP,27017/TCP,27020/
 mongodb-node02   10.3.0.13    <none>        27019/TCP,27018/TCP,27017/TCP,27020/TCP,27021/TCP   1d
 mongodb-node03   10.3.0.47    <none>        27019/TCP,27018/TCP,27017/TCP,27020/TCP,27021/TCP   1d
 ```
+##Configuration Options
+Configuration options are currently hard coded in `src/generate.sh`. This will be enhanced later. The following options are availabe:
+```
+NODES: number of cluster nodes (default: all nodes on your cluster as determined by kubectl)
+SHARDS: number of shards in your mongo database (default: number of cluster nodes)
+MONGOS_PER_CLUSTER: you connect to your shard through mongos (default: one per node, minimum: 1)
+CFG_PER_CLUSTER: config servers per cluster (default: 1 config server, configured as a replication set)
+CFG_REPLICA: number of replicas per configuration cluster (default: number of nodes)
+REPLICAS_PER_SHARD: each shard is configured as a replication set (default: 2)
 
+##Ports
+As each pod gets on IP address assigned, each service within a pod must have an individual port assigned. 
+As the mongos are the services by which you access your shard from other applications, the standard
+mongodb port `27017' is given to them. Here is the list of port assignments:
+
+Usually you need not be concerned about the ports as you will only access 
+
+
+
+
+##Examples
 
 
 ##Todos:
