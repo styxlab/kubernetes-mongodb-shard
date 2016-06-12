@@ -94,7 +94,7 @@ mongos> sh.status()
 
 ##Consume
 The default configurations configures one mongos service per node. Use one of them to connect
-to your shard from any other application on your kubernetes cluser:
+to your shard from any other application on your kubernetes cluster:
 ```
 $ kubectl get svc -l role="mongoshard"
 NAME             CLUSTER-IP   EXTERNAL-IP   PORT(S)                                             AGE
