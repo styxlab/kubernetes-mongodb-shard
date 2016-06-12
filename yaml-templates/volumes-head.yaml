@@ -1,4 +1,4 @@
       volumes:
       - name: db-cfg
         hostPath:
-          path: /enc/mongodb/db-cfg
+          path: __BASEDIR__/mongodb/db-cfg

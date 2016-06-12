@@ -15,16 +15,20 @@
 # Build tools.
 #
 
-all:
+build:
 	src/clean.sh
 	src/generate.sh
+.PHONY: build
+
+run:
 	src/create.sh
 	sleep 60
 	src/automate.sh
+.PHONY: run
 
-build:
-	src/generate.sh
-.PHONY: build
+config:
+	src/config.sh
+.PHONY: config
 
 clean:
 	src/clean.sh

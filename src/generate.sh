@@ -159,6 +159,7 @@ function genYamlFromTemplates(){
 			> $OUTFILE
 		OUTFILE="./tmp/yaml/node${NODENUM}-db${RSNUM}-volumes.yaml"
 		cat "${TEMPLATE_PATH}/volumes-template.yaml" \
+		    | sed "s|__BASEDIR__|${BASEDIR}|g" \
 			| sed "s|__RSNUM__|${RSNUM}|g" \
 			| sed "/##/d" \
 			> $OUTFILE
@@ -255,6 +256,7 @@ genFinalFromPartials(){
 			${YAML_PATH}/node${NODENUM}-mgs*.yaml \
 			${TEMPLATE_PATH}/volumes-head.yaml \
 			${YAML_PATH}/node${NODENUM}-db*-volumes.yaml \
+		| sed "s|__BASEDIR__|${BASEDIR}|g" \
 		| sed "s|__CONFIG_SERVERS_SERVICES__|${CONFIG_SERVERS_SERVICES}|g" \
 		> "./build/node${NODENUM}-deployment.yaml"
 	done
@@ -270,15 +272,19 @@ genFinalFromPartials(){
 
 # Ensure clean startup
 cleanUp
+
 # Gather basic config parameters
-echo "Please ensure that pods can be scheduled on all these nodes."
-echo "------------------------------------------------------------"
 kubectl get nodes -o=name > ./tmp/nodefile
 getNodeNames "./tmp/nodefile" "./tmp"
 NODES=$(cat ./tmp/nodefile |wc -l)
-#NODES=$((NODES+2))
-echo "CLUSTER NODES.....................: ${NODES}"
 
+# Ask for some config parameters
+source src/configure.sh ${NODES}
+
+echo "Please ensure that pods can be scheduled on all these nodes."
+echo "------------------------------------------------------------"
+NODES=${CFGNODES}
+echo "CLUSTER NODES.....................: ${NODES}"
 SHARDS=${NODES}
 validateConstraints $SHARDS 1 $NODES
 echo "SHARD MEMBERS.....................: ${SHARDS}"
@@ -367,6 +373,7 @@ done
 genFinalFromPartials
 
 echo 'Generate needed directories on remote server ...'
-sh remote.sh ${SHARDS}
-
-echo "Successfully executed. Inspect the yaml folder for the generated files."
+./src/remote.sh ${SHARDS} ${SSHUSER} ${SSHPORT} ${BASEDIR}
+echo
+echo "Successfully executed."
+echo "Execute 'make run' to fire up the mongodb shard on your cluster."

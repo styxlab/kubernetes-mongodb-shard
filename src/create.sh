@@ -9,4 +9,4 @@ while read p; do
   	echo "Create Deployment on machine ${NAME} (node${NODE})..."
   	kubectl create -f ./build/node${NODE}-deployment.yaml
   	i=$((i+1))
-done < ./temp/nodefile
+done < ./tmp/nodefile

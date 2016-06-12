@@ -1,3 +1,3 @@
       - name: db-rs__RSNUM__
         hostPath:
-          path: /enc/mongodb/db-rs__RSNUM__
+          path: __BASEDIR__/mongodb/db-rs__RSNUM__
