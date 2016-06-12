@@ -1,5 +1,5 @@
 # kubernetes-mongodb-shard
-Deploy a mongodb sharded cluster on kubernetes. This works on both small clusters with a minimum of 3 nodes and very large clusters with 100+ nodes.
+Deploy a mongodb sharded cluster on kubernetes. This works on both small clusters with a minimum of 3 nodes and large clusters with 100+ nodes.
 
 ##Prerequisites
 - A Kubernetes cluster with at least 3 scheduable nodes.
