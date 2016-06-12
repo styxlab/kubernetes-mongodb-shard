@@ -3,6 +3,7 @@ Deploy a mongodb sharded cluster on kubernetes.
 
 ##Prerequisites
 - A Kubernetes cluster with at least 3 scheduable nodes.
+- Kubernetes v1.2.3 or greater
 
 ##Features
 - Configurable number of shards, replicas, config servers and mongos
