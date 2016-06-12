@@ -28,7 +28,7 @@ to maximize I/O throughput.
 
 Replication is achived by the built in mongodb feature rather than kubernetes
 itself. However, as kubernetes knows about the desired state of your shard, it
-will try to restore all services automatically should one node goes down.
+will try to restore all services automatically should one node go down.
 
 ##Usage
 ```
