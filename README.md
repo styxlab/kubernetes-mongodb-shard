@@ -44,8 +44,7 @@ need to execute these files on your kubernetes cluster:
 $ make run
 ```
 ##Verify
-If all goes well, you will see that all deployments are up and running. For a 3 node shard, a typical
-output is shown below.
+After a minute or two (depending on how fast the docker images are fretched over your network) you should see that all deployments are up and running. For a 3 node shard, a typical output is shown below.
 ```
 $ kubectl get deployments -l role="mongoshard"
 NAME                   DESIRED   CURRENT   UP-TO-DATE   AVAILABLE   AGE
@@ -59,7 +58,7 @@ mongodb-shard-node01-1358154500-wyv5n   5/5       Running   0          1d
 mongodb-shard-node02-1578289992-i49fw   5/5       Running   0          1d
 mongodb-shard-node03-4184329044-vwref   5/5       Running   0          1d
 ```
-You can now connect to one of the mogos and inspect the status of the shard:
+You can now connect to one of the mongos and inspect the status of the shard:
 ```
 $ kubectl exec -ti mongodb-shard-node01-1358154500-wyv5n -c mgs01-node01 mongo
 MongoDB shell version: 3.2.6
@@ -115,15 +114,23 @@ REPLICAS_PER_SHARD: each shard is configured as a replication set (default: 2)
 ```
 
 ##Ports
-As each pod gets on IP address assigned, each service within a pod must have an individual port assigned. 
+As each pod gets one IP address assigned, each service within a pod must have a distinct port. 
 As the mongos are the services by which you access your shard from other applications, the standard
 mongodb port `27017` is given to them. Here is the list of port assignments:
+
+| Service                         | Port    |
+| ------------------------------- | --------|
+| Mongos                          |  27017  |
+| Config Server                   |  27018  |
+| Arbiter (if present)            |  27019  |
+| Replication Server (Primary)    |  27020  |
+| Replication Server (Secondary)  |  27021  |
 
 Usually you need not be concerned about the ports as you will only access the shard through the
 standard port `27017`.
 
 ##Examples
-A typical `yaml` file for one pod will look like this:
+A typical `yaml` file for one node is shown below:
 ```
 apiVersion: v1
 kind: Service
@@ -171,7 +178,7 @@ spec:
         tier: backend
     spec:
       nodeSelector:
-        kubernetes.io/hostname: 78.47.201.138
+        kubernetes.io/hostname: 80.40.200.130
       containers:
       - name: arb03-node01
         image: mongo:3.2
@@ -269,6 +276,44 @@ spec:
           path: /enc/mongodb/db-rs03
 ```
 
-##Todos:
+##Layouts
+In order to get an understanding on how this script distributes the different mongodb servers and replication
+set on your cluster, a couple examples are shown. First, take note of the notation:
+
+| Abbreviation |  Meaning                  |
+| -------------| --------------------------|
+| columns      |  nodes                    |
+| rows         |  shards                   |
+| -            |  no assignment            |
+| rsp          |  replica set (primary)    |
+| rss          |  replica set (secondary)  |
+| arb          |  arbiter                  |
+
+###3 nodes, 3 shards, 2 shards per node, 1 arbiter
+
+|         | node 1 |  node 2 | node 3 |
+| ------- | ------ | ------- | ------ |
+| shard 1 | rsp    |  rss    | arb    |
+| shard 2 | rss    |  arb    | rsp    |
+| shard 3 | arb    |  rsp    | rss    |
+
+As can bee seen, the secondary of a particular shard is always on a different node than the primary.
+This ensures the replication feature. Also, each node does contain the same number of data stores, thus
+distributing disk usage evenly accross the cluster.
+
+###5 nodes, 5 shards, 2 shards per node, 1 arbiter
+
+|         | node 1 |  node 2 | node 3 | node 4 | node 5 |
+| ------- | ------ | ------- | ------ | ------ | ------ |
+| shard 1 | rsp    |  rss    | arb    | -      | -      |
+| shard 2 | rss    |  arb    | -      | -      | rsp    |
+| shard 3 | arb    |  -      | -      | rsp    | rss    |
+| shard 4 | -      |  -      | rsp    | rss    | arb    |
+| shard 5 | -      |  rsp    | rss    | arb    | -      |
+
+Note that the same properties are retained for a larger cluster with 5 nodes. So, you can achieve
+real horizontal scaling of your mongodb database with this technique.
+
+##Todos
 - Gather config parameters
 - EmptyDir option
