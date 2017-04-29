@@ -1,5 +1,5 @@
       - name: __RSID____MSGNUM__-node__NODENUM__
-        image: mongo:3.2
+        image: mongo:__VERSION__
         command:
         - "mongos"
         args:

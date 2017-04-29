@@ -3,6 +3,7 @@
 set -eo pipefail
 
 NODES=$1 && [ -z "${1}" ] && NODES="3" || true
+VERSION="3.2"
 
 echo
 echo "Please supply some important configuration parameters below:"
@@ -15,4 +16,6 @@ read -p "Root directory for your mongodb data [/data]: " BASEDIR
 [ -z "$BASEDIR" ] && BASEDIR="/data" || true
 read -p "Number of nodes for your shard [${NODES}]: " CFGNODES
 [ -z "$CFGNODES" ] && CFGNODES=$NODES || true
+read -p "MongoDB version [${VERSION}]: " VERSION
+[ -z "$VERSION" ] && VERSION="3.2" || true
 echo

@@ -155,6 +155,7 @@ function genYamlFromTemplates(){
 			| sed "s|__RSNUM__|${RSNUM}|g" \
 			| sed "s|__PORT__|${PORT}|g" \
 			| sed "s|__RSID__|${RSID}|g" \
+			| sed "s|__VERSION__|${VERSION}|g" \
 			| sed "/##/d" \
 			> $OUTFILE
 		OUTFILE="./tmp/yaml/node${NODENUM}-db${RSNUM}-volumes.yaml"
@@ -198,6 +199,7 @@ function genYamlFromTemplates(){
 			| sed "s|__RSNUM__|${RSNUM}|g" \
 			| sed "s|__PORT__|${PORT}|g" \
 			| sed "s|__RSID__|${RSID}|g" \
+			| sed "s|__VERSION__|${VERSION}|g" \
 			| sed "/##/d" \
 			> $OUTFILE
 		ID=$((${NODENUM}-1))
@@ -214,6 +216,7 @@ function genYamlFromTemplates(){
 			| sed "s|__MSGNUM__|${MSGNUM}|g" \
 			| sed "s|__PORT__|${PORT}|g" \
 			| sed "s|__RSID__|${RSID}|g" \
+			| sed "s|__VERSION__|${VERSION}|g" \
 			| sed "/##/d" \
 			> $OUTFILE
 	fi
