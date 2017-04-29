@@ -277,7 +277,7 @@ genFinalFromPartials(){
 cleanUp
 
 # Gather basic config parameters
-kubectl get nodes -o=name > ./tmp/nodefile
+kubectl get nodes| grep -v "SchedulingDisabled" | awk '{print $1}' | tail -n +2 > ./tmp/nodefile
 getNodeNames "./tmp/nodefile" "./tmp"
 NODES=$(cat ./tmp/nodefile |wc -l)
 
