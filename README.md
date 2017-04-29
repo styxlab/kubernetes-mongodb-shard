@@ -1,11 +1,11 @@
 # kubernetes-mongodb-shard
 Deploy a mongodb sharded cluster on kubernetes. This works on both small clusters with a minimum of 3 nodes and large clusters with 100+ nodes.
 
-##Prerequisites
+## Prerequisites
 - A Kubernetes cluster with at least 3 scheduable nodes.
 - Kubernetes v1.2.3 or greater
 
-##Features
+## Features
 - Configurable number of shards, replicas, config servers and mongos
 - Shard members and data replicas are distributed evenly on available nodes
 - Storage is directly allocated on each node
@@ -13,7 +13,7 @@ Deploy a mongodb sharded cluster on kubernetes. This works on both small cluster
 - Services are setup which can be consumed upstream
 - Official mongodb docker image is used without modifications
 
-##Description
+## Description
 Setting up a mongodb shard on kubernetes is easy with this repo. `kubectl`
 is used to determine the number of nodes in your cluster
 and the provided shell script `src/generate.sh` creates one kubernetes `yaml`
@@ -30,7 +30,7 @@ Replication is achived by the built in mongodb feature rather than kubernetes
 itself. However, as kubernetes knows about the desired state of your shard, it
 will try to restore all services automatically should one node go down.
 
-##Usage
+## Usage
 ```
 $ git clone https://github.com/styxlab/kubernetes-mongodb-shard.git
 $ cd kubernetes-mongodb-shard
@@ -43,7 +43,7 @@ need to execute these files on your kubernetes cluster:
 ```
 $ make run
 ```
-##Verify
+## Verify
 After a minute or two (depending on how fast the docker images are fretched over your network) you should see that all deployments are up and running. For a 3 node shard, a typical output is shown below.
 ```
 $ kubectl get deployments -l role="mongoshard"
@@ -91,7 +91,7 @@ mongos> sh.status()
 	{  "_id" : "styxmail",  "primary" : "rs01",  "partitioned" : true }
 ```
 
-##Consume
+## Consume
 The default configurations configures one mongos service per node. Use one of them to connect
 to your shard from any other application on your kubernetes cluster:
 ```
@@ -102,7 +102,7 @@ mongodb-node02   10.3.0.13    <none>        27019/TCP,27018/TCP,27017/TCP,27020/
 mongodb-node03   10.3.0.47    <none>        27019/TCP,27018/TCP,27017/TCP,27020/TCP,27021/TCP   1d
 ```
 
-##Configuration Options
+## Configuration Options
 Configuration options are currently hard coded in `src/generate.sh`. This will be enhanced later. The following options are availabe:
 ```
 NODES: number of cluster nodes (default: all nodes on your cluster as determined by kubectl)
@@ -113,7 +113,7 @@ CFG_REPLICA: number of replicas per configuration cluster (default: number of no
 REPLICAS_PER_SHARD: each shard is configured as a replication set (default: 2)
 ```
 
-##Ports
+## Ports
 As each pod gets one IP address assigned, each service within a pod must have a distinct port. 
 As the mongos are the services by which you access your shard from other applications, the standard
 mongodb port `27017` is given to them. Here is the list of port assignments:
@@ -129,7 +129,7 @@ mongodb port `27017` is given to them. Here is the list of port assignments:
 Usually you need not be concerned about the ports as you will only access the shard through the
 standard port `27017`.
 
-##Examples
+## Examples
 A typical `yaml` file for one node is shown below:
 ```
 apiVersion: v1
@@ -276,7 +276,7 @@ spec:
           path: /enc/mongodb/db-rs03
 ```
 
-##Layouts
+## Layouts
 In order to get an understanding on how this script distributes the different mongodb servers and replication
 set on your cluster, a couple examples are shown. First, take note of the notation:
 
