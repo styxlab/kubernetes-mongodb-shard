@@ -301,7 +301,7 @@ As can bee seen, the secondary of a particular shard is always on a different no
 This ensures the replication feature. Also, each node does contain the same number of data stores, thus
 distributing disk usage evenly accross the cluster.
 
-###5 nodes, 5 shards, 2 shards per node, 1 arbiter
+### 5 nodes, 5 shards, 2 shards per node, 1 arbiter
 
 |         | node 1 |  node 2 | node 3 | node 4 | node 5 |
 | ------- | ------ | ------- | ------ | ------ | ------ |
@@ -314,6 +314,6 @@ distributing disk usage evenly accross the cluster.
 Note that the same properties are retained for a larger cluster with 5 nodes. So, you can achieve
 real horizontal scaling of your mongodb database with this technique.
 
-##Todos
+## Todos
 - Gather config parameters
 - EmptyDir option
