@@ -44,7 +44,7 @@ need to execute these files on your kubernetes cluster:
 $ make run
 ```
 ## Verify
-After a minute or two (depending on how fast the docker images are fretched over your network) you should see that all deployments are up and running. For a 3 node shard, a typical output is shown below.
+After a minute or two (depending on how fast the docker images are fetched over your network) you should see that all deployments are up and running. For a 3 node shard, a typical output is shown below.
 ```
 $ kubectl get deployments -l role="mongoshard"
 NAME                   DESIRED   CURRENT   UP-TO-DATE   AVAILABLE   AGE
