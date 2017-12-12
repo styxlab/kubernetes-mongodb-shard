@@ -297,7 +297,7 @@ set on your cluster, a couple examples are shown. First, take note of the notati
 | shard 2 | rss    |  arb    | rsp    |
 | shard 3 | arb    |  rsp    | rss    |
 
-As can bee seen, the secondary of a particular shard is always on a different node than the primary.
+As can be seen, the secondary of a particular shard is always on a different node than the primary.
 This ensures the replication feature. Also, each node does contain the same number of data stores, thus
 distributing disk usage evenly accross the cluster.
 
