@@ -289,7 +289,7 @@ set on your cluster, a couple examples are shown. First, take note of the notati
 | rss          |  replica set (secondary)  |
 | arb          |  arbiter                  |
 
-###3 nodes, 3 shards, 2 shards per node, 1 arbiter
+### 3 nodes, 3 shards, 2 shards per node, 1 arbiter
 
 |         | node 1 |  node 2 | node 3 |
 | ------- | ------ | ------- | ------ |
